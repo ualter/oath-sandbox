@@ -13,7 +13,6 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
@@ -25,7 +24,9 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -34,7 +35,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class OAuthUtils {
 
@@ -136,11 +136,12 @@ public class OAuthUtils {
 		if (isValid(scope)) {
 			parametersBody.add(new BasicNameValuePair(OAuthConstants.SCOPE, scope));
 		}
-
-		DefaultHttpClient client = new DefaultHttpClient();
+		
+		
 		HttpResponse response = null;
 		String accessToken = null;
-		try {
+		
+		try ( CloseableHttpClient client = HttpClientBuilder.create().build() ) {
 			post.setEntity(new UrlEncodedFormEntity(parametersBody, HTTP.UTF_8));
 
 			response = client.execute(post);
