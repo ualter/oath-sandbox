@@ -1,0 +1,4 @@
+URL to get the Access Token:
+https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=899377700198-4o708rg7ddptckrsdmq3bfuduvuckjj7.apps.googleusercontent.com&scope=https://www.googleapis.com/auth/gmail.readonly&redirect_uri=http%3A%2F%2Flocalhost:8080/wwwhttp/oauthcallback/index.html
+
+
