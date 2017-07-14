@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -312,11 +312,12 @@ public class OAuthUtils {
 	public static String encodeCredentials(String username, String password) {
 		String cred = username + ":" + password;
 		String encodedValue = null;
-		byte[] encodedBytes = Base64.encodeBase64(cred.getBytes());
+		
+		byte[] encodedBytes = Base64.getEncoder().encode(cred.getBytes());
 		encodedValue = new String(encodedBytes);
 		System.out.println("encodedBytes " + new String(encodedBytes));
-
-		byte[] decodedBytes = Base64.decodeBase64(encodedBytes);
+		
+		byte[] decodedBytes = Base64.getDecoder().decode(encodedBytes);
 		System.out.println("decodedBytes " + new String(decodedBytes));
 
 		return encodedValue;
