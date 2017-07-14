@@ -1,0 +1,11 @@
+
+
+Run with:
+-Dhttps.protocols=TLSv1.1,TLSv1.2
+
+In Case:
+javax.net.ssl.SSLHandshakeException: Remote host closed connection during handshake during web service communicaiton
+
+Explanation:
+Java 7 defaults to TLS 1.0, which can cause this error when that protocol is not accepted. I ran into this problem with a Tomcat application and a server that would not accept TLS 1.0 connections any longer. I added
+
