@@ -1,8 +1,13 @@
 package br.com.oath.sandbox;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -116,6 +121,62 @@ public class OAuthUtils {
 
 	}
 
+	public static String getAccessToken2(OAuth2Details oauthDetails) {
+		
+		try {
+			URL url = new URL("https://accounts.google.com/o/oauth2/token");
+			
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			
+			StringBuffer urlParameters = new StringBuffer();
+			urlParameters
+			//.append("code=").append(oauthDetails.getClientId())
+			.append("client_id=").append(oauthDetails.getClientId())
+			.append("client_secret=").append(oauthDetails.getClientSecret())
+			.append("redirect_uri=").append("https://flixomnia.com/oauth2callback")
+			.append("grant_type=").append(oauthDetails.getGrantType())
+			.append("scope=").append(oauthDetails.getScope());
+			
+			connection.setDoOutput(true);
+		    connection.setDoInput(true);
+		    connection.setInstanceFollowRedirects(true);
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		    //connection.setRequestProperty("Authorization", "Bearer " + oauthDetails.getClientSecret());
+		    connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.toString().getBytes().length));
+		    connection.setRequestProperty("X-GData-Key", "key=" + oauthDetails.getClientSecret());
+		    connection.setRequestProperty("GData-Version", "2");
+
+		    connection.setUseCaches(false);
+		    
+
+		    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+
+		    wr.writeBytes(urlParameters.toString());
+		    wr.flush();
+		    InputStream inputStream = connection.getInputStream();
+		    byte[] b = new byte[1024];
+		    while (inputStream.read(b) != -1) {
+		        System.out.print(new String(b));
+
+		    }
+		    System.out.println("");
+		    wr.close();
+		    connection.disconnect();
+			
+			
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (ProtocolException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return null;
+		
+	}
+	
 	public static String getAccessToken(OAuth2Details oauthDetails) {
 		HttpPost post = new HttpPost(oauthDetails.getAuthenticationServerUrl());
 		String clientId = oauthDetails.getClientId();
@@ -162,6 +223,7 @@ public class OAuthUtils {
 					response = client.execute(post);
 					code = response.getStatusLine().getStatusCode();
 					if (code >= 400) {
+						
 						throw new RuntimeException("Could not retrieve access token for user: " + oauthDetails.getUsername());
 					}
 				}
@@ -170,11 +232,10 @@ public class OAuthUtils {
 			Map<String, String> map = handleResponse(response);
 			accessToken = map.get(OAuthConstants.ACCESS_TOKEN);
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		return accessToken;

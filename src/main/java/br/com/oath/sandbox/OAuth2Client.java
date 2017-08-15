@@ -5,7 +5,7 @@ import java.util.Properties;
 public class OAuth2Client {
 
 	public static void main(String[] args) {
-
+		
 		Properties config = OAuthUtils.getClientConfigProps(OAuthConstants.CONFIG_FILE_PATH);
 		String resourceServerUrl = config.getProperty(OAuthConstants.RESOURCE_SERVER_URL);
 		String username = config.getProperty(OAuthConstants.USERNAME);
@@ -21,7 +21,10 @@ public class OAuth2Client {
 			// Resource server url is not valid. Only retrieve the access token
 			System.out.println("Retrieving Access Token");
 			OAuth2Details oauthDetails = OAuthUtils.createOAuthDetails(config);
-			String accessToken = OAuthUtils.getAccessToken(oauthDetails);
+			
+			//String accessToken = OAuthUtils.getAccessToken(oauthDetails);
+			String accessToken = OAuthUtils.getAccessToken2(oauthDetails);
+			
 			if (OAuthUtils.isValid(accessToken)) {
 				System.out.println("Successfully retrieved Access token for Password Grant: " + accessToken);
 			}

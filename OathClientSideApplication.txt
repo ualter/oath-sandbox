@@ -1,13 +1,38 @@
+******************************************************************************************************************************************************************************
+******************************************************************************************************************************************************************************
+******************************************************************************************************************************************************************************
+
+OATH2
+*****
+
+Authorization grant
+-------------------
+The authorization grant is a credential representing the resource owner's authorization that can be used to access a protected resource. This credential is used by the client to obtain an access token. The access token is eventually sent along with the request to access a protected resource. 
+
+OAuth 2.0 defines four grant types:
+- Authorization code
+- Implicit
+- Resource owner password credentials
+- Client credentials
+
+Below we are using the Authorization Grant: Authorization Code
+
+
+******************************************************************************************************************************************************************************
+******************************************************************************************************************************************************************************
+******************************************************************************************************************************************************************************
+
+
 -----  URL to get the Access Token  -----
 https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=899377700198-4o708rg7ddptckrsdmq3bfuduvuckjj7.apps.googleusercontent.com&scope=https://www.googleapis.com/auth/gmail.readonly&redirect_uri=http%3A%2F%2Flocalhost:8080/wwwhttp/oauthcallback/index.html
 -------------------------------------------
 
 ---- URL to validate the Access Token -----
-https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=ya29.RgIDmSs7WsOuhIoM2TJ2fd_0IGy1AZdtFv22WcPNZZwFchCUjgFhofdLuGvaHiLBx7HP
+https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=ya29.ElqRBFixMWy3w5Eeuz3Mubu7U7Mc9h_8_yPX8DxNFI4HA8Rz3_OHz1ZttYmyzhJ0odcZR-3BWUgkwqMUdKAf3uoMGwobOwL9QvgnwmsqqrZDCB7pMT3DWvmQ290
 -------------------------------------------
 
 ---- GMAIL API -----
-https://www.googleapis.com/gmail/v1/users/ualter.junior@gmail.com/messages/?access_token=ya29.RgIDmSs7WsOuhIoM2TJ2fd_0IGy1AZdtFv22WcPNZZwFchCUjgFhofdLuGvaHiLBx7HP
+https://www.googleapis.com/gmail/v1/users/ualter.junior@gmail.com/messages/?access_token=ya29.ElqRBFixMWy3w5Eeuz3Mubu7U7Mc9h_8_yPX8DxNFI4HA8Rz3_OHz1ZttYmyzhJ0odcZR-3BWUgkwqMUdKAf3uoMGwobOwL9QvgnwmsqqrZDCB7pMT3DWvmQ290
 -------------------------------------------
 
 ----- oauthcallback/index.html ------
