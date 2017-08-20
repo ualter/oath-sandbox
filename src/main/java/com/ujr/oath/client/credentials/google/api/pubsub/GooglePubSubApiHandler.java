@@ -81,7 +81,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 			}
 		});
 		
-		Utils.createExecutorService("CONSUMER").execute(new Runnable() {
+		Utils.createExecutorService("CONSUMER -->LISTENING").execute(new Runnable() {
 			@Override
 			public void run() {
 				testPullMessagesForSubscription("ualter",pubSubApiHandler);
@@ -104,7 +104,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		request.setReturnImmediately(false);
 		
 		FutureTask<ResponsePullMessagesSubscription> futureTaskPullMessagesForSubscription = pubSubApiHandler.pullMessagesForSubscription(request, true);
-		ExecutorService executor = Utils.createExecutorService("CONSUMER");
+		ExecutorService executor = Utils.createExecutorService("CONSUMER -->PULLING");
 		executor.execute(futureTaskPullMessagesForSubscription);
 		try {
 			int times = 60;
@@ -163,61 +163,9 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 	}
 	
 	public FutureTask<ResponsePullMessagesSubscription> pullMessagesForSubscription(RequestPullMessagesSubscription request, boolean acknowledge) {
-		
 		CallablePullMessagesSubscription callable = new CallablePullMessagesSubscription(this.appServiceAccount,request, acknowledge);
 		FutureTaskPullMessagesSubscription taskPullMessagesSubscription = new FutureTaskPullMessagesSubscription(callable);
 		return taskPullMessagesSubscription;
-		
-//		FutureTask<ResponsePullMessagesSubscription> future = new FutureTask<ResponsePullMessagesSubscription>(new Callable<ResponsePullMessagesSubscription>() {
-//			
-//			public FutureTask<HttpResponse> futureTaskResponse;
-//			
-//			@Override
-//			public ResponsePullMessagesSubscription call() throws Exception {
-//				ResponsePullMessagesSubscription responsePullMessagesSubscription = null;
-//				
-//				LOG.info("Pull Messages for Subscription {}...",request.getSubscription());
-//				
-//				StringBuilder url = new StringBuilder(prepareUrl(GooglePubSubApiUtils.URL_PULL_MSGS_SUBSCRIPTION).replaceAll("#subscription#", request.getSubscription()));
-//				url.append("?access_token=")
-//				   .append(generateAccessToken().getAccessToken());
-//				
-//				ObjectMapper mapper = new ObjectMapper();
-//				String jsonPostData;
-//				try {
-//					jsonPostData = mapper.writeValueAsString(request);
-//				} catch (JsonProcessingException e) {
-//					LOG.error(e.getMessage(), e);
-//					throw new RuntimeException(e);
-//				}
-//				
-//				this.futureTaskResponse = doHttpJSONPost(url.toString(), jsonPostData.toString());
-//				Executor executor = Utils.createExecutorService();
-//				executor.execute(futureTaskResponse);
-//				
-//				HttpResponse response = futureTaskResponse.get();
-//				if ( response.getCode().isOk() ) { 
-//					responsePullMessagesSubscription = response.convertResponseTo(ResponsePullMessagesSubscription.class);
-//					if ( responsePullMessagesSubscription.getReceivedMessages() != null ) {
-//						LOG.info("Total of {} Messages pulled for the Subscription: {}",responsePullMessagesSubscription.getReceivedMessages().size(),request.getSubscription());
-//						final AtomicInteger countResponse = new AtomicInteger();
-//						responsePullMessagesSubscription.getReceivedMessages().forEach(m -> LOG.info("  ===> Messaged #{} Received:\"{}\" [{}]",countResponse.incrementAndGet(),m.getMessage().getDataDecoded(),m.getMessage()));
-//						if (acknowledge) {
-//							List<String> ackIds = responsePullMessagesSubscription.getReceivedMessages().stream().map(m -> m.getAckId()).collect(Collectors.toList());
-//							ListAckIds listAckIds = new ListAckIds();
-//							listAckIds.setAckIds(ackIds);
-//							acknowledgeReceivedMessages(listAckIds, request.getSubscription());
-//						}
-//					} else {
-//						LOG.info("No messages were found for the Subscription: {}",request.getSubscription());
-//					}
-//				} else {
-//					logError(response);
-//				}
-//				return responsePullMessagesSubscription;
-//			}
-//		});
-//		return future;
 	}
 	
 	public void acknowledgeReceivedMessages(ListAckIds listAckIds, String subscription) {
