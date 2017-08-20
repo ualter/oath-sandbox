@@ -24,6 +24,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpRequestFutureTask;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -84,37 +85,31 @@ public class HttpCommunicationHandler {
 		return response;
 	}
 	
-	public FutureTask<HttpResponse> doHttpJSONPost(String urlAddress, String jsonData) {
+	public HttpResponse doHttpJSONPost(String urlAddress, String jsonData) {
 		return doHttpJSONPost(urlAddress, jsonData, ContentType.ApplicationJSON);
 	}
 	
-	public FutureTask<HttpResponse> doHttpJSONPost(String urlAddress, String jsonData, ContentType contentType) {
-		FutureTask<HttpResponse> future = new FutureTask<HttpResponse>(new Callable<HttpResponse>() {
-			@Override
-			public HttpResponse call() throws Exception {
-				HttpResponse response  = null;
-				try ( CloseableHttpClient httpclient = HttpClients.createDefault() ) {
-					HttpPost httpPost = new HttpPost(urlAddress);
-					StringEntity entityJson = new StringEntity(jsonData);
-				    httpPost.setEntity(entityJson);
-				    httpPost.setHeader("Accept", "application/json");
-				    httpPost.setHeader("Content-type", contentType.descriptionType());
-					try (CloseableHttpResponse httpResponse = httpclient.execute(httpPost) ) {
-						// httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK
-						HttpEntity httpEntity = httpResponse.getEntity();
-						String responseContent = EntityUtils.toString(httpEntity);
-						response = new HttpResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getStatusLine().getReasonPhrase());
-						response.setContent(new StringBuilder(responseContent));
-						response.setCode(httpResponse.getStatusLine().getStatusCode());
-					}
-				} catch (IOException e1) {
-					LOG.error(e1.getMessage(),e1);
-					throw new RuntimeException(e1);
-				}
-				return response;
+	public HttpResponse doHttpJSONPost(String urlAddress, String jsonData, ContentType contentType) {
+		HttpResponse response  = null;
+		try ( CloseableHttpClient httpclient = HttpClients.createDefault() ) {
+			HttpPost httpPost = new HttpPost(urlAddress);
+			StringEntity entityJson = new StringEntity(jsonData);
+		    httpPost.setEntity(entityJson);
+		    httpPost.setHeader("Accept", "application/json");
+		    httpPost.setHeader("Content-type", contentType.descriptionType());
+			try (CloseableHttpResponse httpResponse = httpclient.execute(httpPost) ) {
+				// httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK
+				HttpEntity httpEntity = httpResponse.getEntity();
+				String responseContent = EntityUtils.toString(httpEntity);
+				response = new HttpResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getStatusLine().getReasonPhrase());
+				response.setContent(new StringBuilder(responseContent));
+				response.setCode(httpResponse.getStatusLine().getStatusCode());
 			}
-		});
-		return future;
+		} catch (IOException e1) {
+			LOG.error(e1.getMessage(),e1);
+			throw new RuntimeException(e1);
+		}
+		return response;
 	}
 	
 //	HttpURLConnection  connection  = null;

@@ -27,9 +27,13 @@ public class ResponsePullMessagesSubscription {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ResponsePullMessagesSubscription [receivedMessages=");
-		builder.append(receivedMessages.stream().map(m -> m.getMessage().toString()).collect(Collectors.joining(" | ")));
-		builder.append("]");
+		if ( receivedMessages != null && receivedMessages.size() > 0 ) {
+			builder.append("ResponsePullMessagesSubscription [receivedMessages=");
+			builder.append(receivedMessages.stream().map(m -> m.getMessage().toString()).collect(Collectors.joining(" | ")));
+			builder.append("]");
+		} else {
+			builder.append("ResponsePullMessagesSubscription [Nothing]");
+		}
 		return builder.toString();
 	}
 	

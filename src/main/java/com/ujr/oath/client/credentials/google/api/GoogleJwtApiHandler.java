@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ujr.oath.ApiHandler;
-import com.ujr.oath.ResponseApiHandler;
+import com.ujr.oath.HttpCommunicationHandler;
+import com.ujr.oath.HttpResponse;
 import com.ujr.oath.client.credentials.google.api.appservice.GoogleAppServiceAccount;
 import com.ujr.oath.client.credentials.google.api.appservice.GoogleAppServiceAccountScorecardUjr;
-import com.ujr.oath.client.credentials.google.api.pubsub.GooglePubSubApiHandler;
+import com.ujr.oath.client.credentials.google.api.pubsub.GooglePubSubApiUtils;
 import com.ujr.oath.jwt.token.AccessToken;
 import com.ujr.oath.jwt.token.AccessTokenInfo;
 import com.ujr.security.utils.PublicPrivateKeysUtils;
@@ -59,7 +59,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
  * @author Ualter
  *
  */
-public class GoogleJwtApiHandler extends ApiHandler {
+public class GoogleJwtApiHandler extends HttpCommunicationHandler {
 	
 	static final Logger LOG = LoggerFactory.getLogger(GoogleJwtApiHandler.class);
 	
@@ -78,7 +78,7 @@ public class GoogleJwtApiHandler extends ApiHandler {
 		GoogleJwtApiHandler jwtGmailApiHandler = new GoogleJwtApiHandler(new GoogleAppServiceAccountScorecardUjr());
 		
 		// Create the Application JWS Token (A Signed JWT) to access the Google PubSub API
-		String jws = jwtGmailApiHandler.createTokenJWT(GooglePubSubApiHandler.URL_API_PUB_SUB_SCOPES);
+		String jws = jwtGmailApiHandler.createTokenJWT(GooglePubSubApiUtils.URL_API_PUB_SUB_SCOPES);
 		
 		// Retrieve the Access Token to communicate with the Google PubSub API
 		AccessToken accessToken = jwtGmailApiHandler.retrieveAccessTokenToAPI(jws);
@@ -97,7 +97,7 @@ public class GoogleJwtApiHandler extends ApiHandler {
 		  .append("&assertion=").append(jws);
 		
 		
-		ResponseApiHandler response    = doHttpPost(appServiceAccount.getTokenUri(), postData.toString());
+		HttpResponse response    = doHttpBasicPost(appServiceAccount.getTokenUri(), postData.toString());
 		if ( response.getCode().isOk() ) {
 			StringBuilder      json        = response.getContent();
 			ObjectMapper       mapper      = new ObjectMapper();
@@ -120,7 +120,7 @@ public class GoogleJwtApiHandler extends ApiHandler {
 		postData
 		  .append("access_token=").append(accessToken.getAccessToken());
 		
-		ResponseApiHandler response     = doHttpPost(URL_ACCESS_TOKEN_INFO, postData.toString());
+		HttpResponse response     = doHttpBasicPost(URL_ACCESS_TOKEN_INFO, postData.toString());
 		if ( response.getCode().isOk() ) {
 			StringBuilder   json            = response.getContent();
 			ObjectMapper    mapper          = new ObjectMapper();

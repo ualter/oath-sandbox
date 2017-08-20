@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class RequestPullMessagesSubscription {
 
 	@JsonProperty("returnImmediately")
-	private Boolean returnImmediately;
+	private Boolean returnImmediately = new Boolean(false);
 	@JsonProperty("maxMessages")
 	@JsonIgnore(true)
 	private Integer maxMessages;

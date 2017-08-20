@@ -3,8 +3,10 @@ package com.ujr.oath.gui;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -22,15 +24,13 @@ import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.RequestPull
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.ResponsePullMessagesSubscription;
 import com.ujr.oath.logger.OathLogOutputStreamAppender;
 import com.ujr.oath.utils.MySimpleDb;
+import com.ujr.oath.utils.Utils;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -177,7 +177,7 @@ public class GooglePubSubMainController implements Initializable {
 			String topic = this.cmbTopics.getSelectionModel().getSelectedItem();
 			
 			TaskPublishMessageTopic taskPublishMessageTopic = new TaskPublishMessageTopic(message, topic);
-			ExecutorService executorService = createExecutorService();
+			ExecutorService executorService = Utils.createExecutorService();
 			executorService.submit(taskPublishMessageTopic);
 			
 			taskPublishMessageTopic.setOnRunning(e -> {
@@ -219,7 +219,7 @@ public class GooglePubSubMainController implements Initializable {
 	
 	
 	private TaskPullMessagesSubscription pullMessages(int subscriptionIndex, boolean returnImmediately) {
-		ExecutorService executorService = createExecutorService();
+		ExecutorService executorService = Utils.createExecutorService();
 		TaskPullMessagesSubscription taskPullMessagesSubscription = new TaskPullMessagesSubscription(this.myDb, subscriptionIndex, returnImmediately);
 		executorService.submit(taskPullMessagesSubscription);
 		
@@ -262,15 +262,6 @@ public class GooglePubSubMainController implements Initializable {
 		});
 		
 		return taskPullMessagesSubscription;
-	}
-
-	private ExecutorService createExecutorService() {
-		ExecutorService executorService = Executors.newFixedThreadPool(5, r -> {
-			Thread t = new Thread(r);
-			t.setDaemon(true);
-			return t;
-		});
-		return executorService;
 	}
 
 	private void initializeUI() {
@@ -342,7 +333,12 @@ public class GooglePubSubMainController implements Initializable {
 			request.setSubscription(this.myDb.getSubscriptions().get(this.subscriptionIndex));
 			request.setMaxMessages(1000);
 			request.setReturnImmediately(returnImmediately);
-			ResponsePullMessagesSubscription response = pubSubApiHandler.pullMessagesForSubscription(request, true);
+			
+			FutureTask<ResponsePullMessagesSubscription> futureTaskResponse = pubSubApiHandler.pullMessagesForSubscription(request, true);
+			Executor executor = Executors.newFixedThreadPool(1);
+			executor.execute(futureTaskResponse);
+			
+			ResponsePullMessagesSubscription response = futureTaskResponse.get();
 			return response;
 		}
 
