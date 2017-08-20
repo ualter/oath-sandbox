@@ -1,10 +1,6 @@
 package com.ujr.oath.client.credentials.google.api.pubsub.taks.pullmessages;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -20,7 +16,6 @@ import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.ListAckIds;
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.RequestPullMessagesSubscription;
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.ResponsePullMessagesSubscription;
 import com.ujr.oath.client.credentials.google.api.pubsub.tasks.AbstractCallable;
-import com.ujr.oath.utils.Utils;
 
 public class CallablePullMessagesSubscription extends AbstractCallable<ResponsePullMessagesSubscription> {
 
