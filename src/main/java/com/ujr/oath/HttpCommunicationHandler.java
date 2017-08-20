@@ -11,8 +11,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +22,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.HttpRequestFutureTask;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -112,50 +109,57 @@ public class HttpCommunicationHandler {
 		return response;
 	}
 	
-//	HttpURLConnection  connection  = null;
-//	DataOutputStream   wr          = null;
-//	BufferedReader     br          = null;
-//	StringBuilder      sb          = null;
-//	ResponseApiHandler response    = null;
-//	try {
-//		// HTTP Connection POST
-//		LOG.trace(urlAddress);
-//		URL url = new URL(urlAddress);
-//		connection = (HttpURLConnection) url.openConnection();
-//		connection.setDoOutput(true);
-//		connection.setDoInput(true);
-//		connection.setInstanceFollowRedirects(true);
-//		connection.setRequestMethod("POST");
-//		connection.setRequestProperty("Content-Type", contentType.descriptionType());
-//		connection.setRequestProperty("Content-Length", "" + Integer.toString(postData.toString().getBytes().length));
-//		connection.setUseCaches(false);
-//		// Sending the POST data content
-//		LOG.trace(postData.toString());
-//	    wr = new DataOutputStream(connection.getOutputStream());
-//	    wr.writeBytes(postData.toString());
-//	    wr.flush();
-//	    
-//	    response = new ResponseApiHandler(connection.getResponseCode(), connection.getResponseMessage());
-//		// Retrieving the response
-//	    sb = readOutput(connection);
-//	    response.setContent(sb);
-//	    
-//	} catch (MalformedURLException e) {
-//		throw new RuntimeException(e);
-//	} catch (ProtocolException e) {
-//		throw new RuntimeException(e);
-//	} catch (IOException e) {
-//		throw new RuntimeException(e);
-//	} finally {
-//		try {
-//			if (connection != null)connection.disconnect();
-//			if ( wr != null) wr.close();
-//			if ( br != null) br.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	return response;
+	/*
+	 * @Deprecated
+	 * 
+	public HttpResponse doHttpPost(String urlAddress) {
+		HttpURLConnection  connection  = null;
+		DataOutputStream   wr          = null;
+		BufferedReader     br          = null;
+		StringBuilder      sb          = null;
+		ResponseApiHandler response    = null;
+		try {
+			// HTTP Connection POST
+			LOG.trace(urlAddress);
+			URL url = new URL(urlAddress);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(true);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", contentType.descriptionType());
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(postData.toString().getBytes().length));
+			connection.setUseCaches(false);
+			// Sending the POST data content
+			LOG.trace(postData.toString());
+		    wr = new DataOutputStream(connection.getOutputStream());
+		    wr.writeBytes(postData.toString());
+		    wr.flush();
+		    
+		    response = new ResponseApiHandler(connection.getResponseCode(), connection.getResponseMessage());
+			// Retrieving the response
+		    sb = readOutput(connection);
+		    response.setContent(sb);
+		    
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		} catch (ProtocolException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				if (connection != null)connection.disconnect();
+				if ( wr != null) wr.close();
+				if ( br != null) br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return response;
+	}
+	*/
+
 	
 	public HttpResponse doHttpGet(String urlAddress) {
 		HttpURLConnection  connection  = null;

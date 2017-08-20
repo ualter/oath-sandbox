@@ -1,4 +1,4 @@
-package com.ujr.oath.client.credentials.google.api.pubsub;
+package com.ujr.oath.client.credentials.google.api.pubsub.tasks;
 
 import java.util.concurrent.FutureTask;
 

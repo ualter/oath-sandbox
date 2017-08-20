@@ -33,8 +33,8 @@ import com.ujr.oath.client.credentials.google.api.pubsub.domain.publish.Response
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.ListAckIds;
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.RequestPullMessagesSubscription;
 import com.ujr.oath.client.credentials.google.api.pubsub.domain.pull.ResponsePullMessagesSubscription;
-import com.ujr.oath.client.credentials.google.api.pubsub.pullmessages.CallablePullMessagesSubscription;
-import com.ujr.oath.client.credentials.google.api.pubsub.pullmessages.FutureTaskPullMessagesSubscription;
+import com.ujr.oath.client.credentials.google.api.pubsub.taks.pullmessages.CallablePullMessagesSubscription;
+import com.ujr.oath.client.credentials.google.api.pubsub.taks.pullmessages.FutureTaskPullMessagesSubscription;
 import com.ujr.oath.jwt.token.AccessToken;
 import com.ujr.oath.utils.Utils;
 
@@ -49,7 +49,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		GooglePubSubApiHandler pubSubApiHandler = new GooglePubSubApiHandler(appServiceAccount);
 		
 //		testListTopicsAndSubscriptions(pubSubApiHandler);
-		testPublishMessages(pubSubApiHandler,1);
+//		testPublishMessages(pubSubApiHandler,50);
 		testPullMessagesForSubscription("ualter",pubSubApiHandler);
 		
 		System.out.println("\n\n ===> END");
@@ -65,29 +65,45 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		ExecutorService executor = Utils.createExecutorService();
 		executor.execute(futureTaskPullMessagesForSubscription);
 		try {
-			int times = 5;
+//			int times = 180;
+			int times = 30;
 			int index = times;
-			while ( !futureTaskPullMessagesForSubscription.isDone() ) {
+			
+			// Listen during 3 minutes  
+			while ( true ) {
 				Thread.sleep(1000);
 				LOG.info("#{} Listening for a messages...", (times - index) + 1 );
+				
+				// Check if were found Messages analyzing if the Pull Task Messages were Done (finalized) 
+				if ( futureTaskPullMessagesForSubscription.isDone() ) {
+					// If were finalized the Task Pull Messages (messaged were found) show al of them
+					ResponsePullMessagesSubscription response = futureTaskPullMessagesForSubscription.get();
+					
+					LOG.info(response.getReceivedMessages().get(0).getMessage().getMessageId() + " - " + response.getReceivedMessages().get(0).getMessage().getDataDecoded());
+					
+					// Get Back a Task Pull Messages listening during the rest of time for new Messages
+					futureTaskPullMessagesForSubscription = pubSubApiHandler.pullMessagesForSubscription(request, true);
+					executor.execute(futureTaskPullMessagesForSubscription);
+				}
+				
 				if ( --index == 0 ) {
 					futureTaskPullMessagesForSubscription.cancel(true);
-					executor.shutdownNow();
+					break;
 				}
 			}
 			
-			if ( !futureTaskPullMessagesForSubscription.isCancelled() ) {
-				ResponsePullMessagesSubscription response = futureTaskPullMessagesForSubscription.get();
-				LOG.info(response.getReceivedMessages().get(0).getMessage().getMessageId() + " - " + response.getReceivedMessages().get(0).getMessage().getDataDecoded());
-			} else {
+//			if ( !futureTaskPullMessagesForSubscription.isCancelled() ) {
+//				ResponsePullMessagesSubscription response = futureTaskPullMessagesForSubscription.get();
+//				LOG.info(response.getReceivedMessages().get(0).getMessage().getMessageId() + " - " + response.getReceivedMessages().get(0).getMessage().getDataDecoded());
+//			} else {
 				LOG.info(" {} attempting was done... nothing arrived, so we quit!", times);
-			}
+//			}
+			
+			executor.shutdownNow();
 			
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
-		
-		executor.shutdownNow();
 	}
 
 	private static void testListTopicsAndSubscriptions(GooglePubSubApiHandler pubSubApiHandler) {
