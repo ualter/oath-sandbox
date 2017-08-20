@@ -45,14 +45,56 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 	private GoogleAppServiceAccount appServiceAccount;
 	
 	public static void main(String[] args) {
+		
 		GoogleAppServiceAccount appServiceAccount = new GoogleAppServiceAccountScorecardUjr();
 		GooglePubSubApiHandler pubSubApiHandler = new GooglePubSubApiHandler(appServiceAccount);
 		
 //		testListTopicsAndSubscriptions(pubSubApiHandler);
 //		testPublishMessages(pubSubApiHandler,50);
-		testPullMessagesForSubscription("ualter",pubSubApiHandler);
+//		testPullMessagesForSubscription("ualter",pubSubApiHandler);
+		
+		testPublishAndPull(pubSubApiHandler);
 		
 		System.out.println("\n\n ===> END");
+	}
+	
+	private static void testPublishAndPull(GooglePubSubApiHandler pubSubApiHandler) {
+		
+		// Publish a Message each 5 seconds during 60 seconds
+		Utils.createExecutorService("PUBLISHER").execute(new Runnable() {
+			@Override
+			public void run() {
+				int times = 60;
+				int index = times; 
+				try {
+					while (true) {
+						Thread.sleep(5000);
+						testPublishMessages(pubSubApiHandler, 1);
+						if ( --index == 0 ) {
+							break;
+						}
+					}
+				} catch (InterruptedException e) {
+					LOG.error(e.getMessage(), e);
+					throw new RuntimeException(e);
+				}
+			}
+		});
+		
+		Utils.createExecutorService("CONSUMER").execute(new Runnable() {
+			@Override
+			public void run() {
+				testPullMessagesForSubscription("ualter",pubSubApiHandler);
+			}
+		});
+		
+		try {
+			Thread.sleep(65000);
+		} catch (InterruptedException e) {
+			LOG.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 	private static void testPullMessagesForSubscription(String subscription, GooglePubSubApiHandler pubSubApiHandler) {
@@ -62,24 +104,22 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		request.setReturnImmediately(false);
 		
 		FutureTask<ResponsePullMessagesSubscription> futureTaskPullMessagesForSubscription = pubSubApiHandler.pullMessagesForSubscription(request, true);
-		ExecutorService executor = Utils.createExecutorService();
+		ExecutorService executor = Utils.createExecutorService("CONSUMER");
 		executor.execute(futureTaskPullMessagesForSubscription);
 		try {
-//			int times = 180;
-			int times = 30;
+			int times = 60;
 			int index = times;
 			
-			// Listen during 3 minutes  
+			// Start Listening  
 			while ( true ) {
 				Thread.sleep(1000);
 				LOG.info("#{} Listening for a messages...", (times - index) + 1 );
 				
 				// Check if were found Messages analyzing if the Pull Task Messages were Done (finalized) 
 				if ( futureTaskPullMessagesForSubscription.isDone() ) {
-					// If were finalized the Task Pull Messages (messaged were found) show al of them
+					// If were finalized the Task Pull Messages (messaged were found) show all of them
 					ResponsePullMessagesSubscription response = futureTaskPullMessagesForSubscription.get();
-					
-					LOG.info(response.getReceivedMessages().get(0).getMessage().getMessageId() + " - " + response.getReceivedMessages().get(0).getMessage().getDataDecoded());
+					response.getReceivedMessages().forEach(m -> LOG.info(m.getMessage().getMessageId() + " - " + m.getMessage().getDataDecoded()));
 					
 					// Get Back a Task Pull Messages listening during the rest of time for new Messages
 					futureTaskPullMessagesForSubscription = pubSubApiHandler.pullMessagesForSubscription(request, true);
@@ -92,13 +132,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 				}
 			}
 			
-//			if ( !futureTaskPullMessagesForSubscription.isCancelled() ) {
-//				ResponsePullMessagesSubscription response = futureTaskPullMessagesForSubscription.get();
-//				LOG.info(response.getReceivedMessages().get(0).getMessage().getMessageId() + " - " + response.getReceivedMessages().get(0).getMessage().getDataDecoded());
-//			} else {
-				LOG.info(" {} attempting was done... nothing arrived, so we quit!", times);
-//			}
-			
+			LOG.info("Listening for Pulling Messages, done!");
 			executor.shutdownNow();
 			
 		} catch (InterruptedException | ExecutionException e) {

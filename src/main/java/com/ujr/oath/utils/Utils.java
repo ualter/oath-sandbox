@@ -5,14 +5,18 @@ import java.util.concurrent.Executors;
 
 public class Utils {
 	
-	public static ExecutorService createExecutorService() {
+	public static ExecutorService createExecutorService(String threadName) {
 		ExecutorService executorService = Executors.newFixedThreadPool(1, r -> {
 			Thread t = new Thread(r);
-			t.setName("UJR ");
+			t.setName(threadName);
 			t.setDaemon(true);
 			return t;
 		});
 		return executorService;
+	}
+	
+	public static ExecutorService createExecutorService() {
+		return createExecutorService("UJR ");
 	}
 
 }
