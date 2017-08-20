@@ -49,7 +49,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		GooglePubSubApiHandler pubSubApiHandler = new GooglePubSubApiHandler(appServiceAccount);
 		
 //		testListTopicsAndSubscriptions(pubSubApiHandler);
-//		testPublishMessages(pubSubApiHandler,1);
+		testPublishMessages(pubSubApiHandler,1);
 		testPullMessagesForSubscription("ualter",pubSubApiHandler);
 		
 		System.out.println("\n\n ===> END");
