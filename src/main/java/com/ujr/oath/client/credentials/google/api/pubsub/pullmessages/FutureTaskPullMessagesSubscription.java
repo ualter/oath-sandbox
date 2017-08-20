@@ -15,14 +15,5 @@ public class FutureTaskPullMessagesSubscription extends AbstractFutureTask<Respo
 		super(callable);
 	}
 
-	@Override
-	public boolean cancel(boolean mayInterruptIfRunning) {
-		// TODO Auto-generated method stub
-		return super.cancel(mayInterruptIfRunning);
-	}
-	
-	
-
-
 
 }

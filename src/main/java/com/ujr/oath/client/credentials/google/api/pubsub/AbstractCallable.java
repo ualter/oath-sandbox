@@ -19,6 +19,7 @@ public class AbstractCallable<T> implements Callable<T> {
 	
 	protected HttpCommunicationHandler httpCommunicationHandler;
 	protected GoogleAppServiceAccount appServiceAccount;
+	protected boolean cancel;
 	
 	public AbstractCallable(GoogleAppServiceAccount appServiceAccount) {
 		super();
