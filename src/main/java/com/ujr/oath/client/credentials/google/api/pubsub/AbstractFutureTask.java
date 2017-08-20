@@ -4,15 +4,16 @@ import java.util.concurrent.FutureTask;
 
 public abstract class AbstractFutureTask<T> extends FutureTask<T> {
 
-	protected AbstractCallable<T> callable;
+	protected AbstractCallable<T> abstractCallable;
 	
 	public AbstractFutureTask(AbstractCallable<T> callable) {
 		super(callable);
+		this.abstractCallable = callable;
 	}
 
 	@Override
 	public boolean cancel(boolean mayInterruptIfRunning) {
-		this.callable.cancel = true;
+		this.abstractCallable.cancel = true;
 		return super.cancel(mayInterruptIfRunning);
 	}
 	
