@@ -17,7 +17,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-import com.ujr.oath.client.credentials.google.api.GoogleJwtApiHandler;
+import com.ujr.oauth.client.credentials.google.api.GoogleJwtApiHandler;
 
 public class CertificateUtils {
 	
