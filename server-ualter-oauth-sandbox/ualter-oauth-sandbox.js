@@ -6,65 +6,53 @@ var Promise     = require('promise');
 var app         = express();
 
 app.get('/oauth2callback', function(req,res) {
-	console.log('Receiving the Authorization Code....');
-	res.writeHead(200, {'Content-Type': 'text/plain'});
+	console.log('\n>>>**************************************');
+	console.log('Request received...\n');
+	res.writeHead(200, {'Content-Type': 'text/plain;charset=UTF-8'});
 
+	var userEmail         = 'ualter.junior@gmail.com';
 	var authorizationCode = req.query.code;
 	console.log('Authorization Code.....:' +  req.query.code);
 
 	retrieveAccessToken(authorizationCode, function(resultRetrieveAccessToken) {
-		console.log('Access Token Response.....:\n' + resultRetrieveAccessToken);
 		var jsonToken = JSON.parse(resultRetrieveAccessToken);  
+		console.log('Access Token...........:' + jsonToken.access_token);
 
-		listUserGmailMailbox('ualter.junior@gmail.com',jsonToken.access_token,function(resultListUserGmailMailbox) {
+		listUserGmailMailbox(userEmail,jsonToken.access_token,function(resultListUserGmailMailbox) {
 			var jsonListMsgs = JSON.parse(resultListUserGmailMailbox); 
 			var messages     = jsonListMsgs.messages; 
+			console.log('Total Inbox Messages...:' + messages.length);
 
-			var fn = function getMessage(msg) {
-				return new Promise(function (resolve, reject){
-
-					readUserGmailMailboxMessage('ualter.junior@gmail.com',jsonToken.access_token,msg.id,function(resultReadUserGmailMailboxMessage) {
+			Promise.all(messages.map( function getMessage(msg) {
+				return new Promise( function (resolve, reject) {
+					readUserGmailMailboxMessage(userEmail,jsonToken.access_token,msg.id,function(resultReadUserGmailMailboxMessage) {
 						var jsonEmailMsg = JSON.parse(resultReadUserGmailMailboxMessage);  
-						var msg = jsonEmailMsg.id;
-						resolve(msg);
+
+						var emailMessage = jsonEmailMsg.id;
+						emailMessage += ' - ';
+						var subject = jsonEmailMsg.payload.headers.find(header => header.name === 'Subject');
+						if (subject != undefined) {
+							emailMessage += subject.value;
+						}
+						console.log('  ---> ' + emailMessage);
+						resolve(emailMessage);
 					});
 
 				});
-			};
-
-			/*jsonListMsgs.messages.forEach(function (msg) {
-
-			});*/
-
-			var actions = messages.map(fn);
-			var results = Promise.all(actions);
-
-			results.then(function(ids) {
-				console.log('Total Msgs...:' + ids.length);
-
-				var content = ' --> \n';
-				ids.forEach(function(id) {
-					content += id + "\n"
+			})).then(function(inboxMessages) {
+				var content = ' --> The ' + inboxMessages.length + ' Inbox Messages of ' + userEmail + '\n';
+				inboxMessages.forEach(function(emailMessage) {
+					content += emailMessage + "\n"
 				});
-				res.end('ok' +  content);
+				res.end(content);
+
+				console.log('\nResponse sent...');
+				console.log('<<<**************************************');
 			});
 
-
-			//res.end('end');
 		});
 	});
 }).listen(8080);
-
-/*
-
-readUserGmailMailboxMessage('ualter.junior@gmail.com',jsonToken.access_token,msg.id,function(result) {
-						var jsonEmailMsg = JSON.parse(result);  
-						responseContent += jsonEmailMsg.id + "-";
-						//responseContent += jsonEmailMsg.snippet;
-						responseContent += '\n';
-						console.log("1");
-					});
-*/
 
 function retrieveAccessToken(authorizationCode, callBack) {
 	var postData = querystring.stringify({
@@ -100,8 +88,7 @@ function listUserGmailMailbox(user,accessToken,callBack) {
 	var getOptions = {
       host: 'www.googleapis.com',
       port: '443',
-      path: '/gmail/v1/users/' + user + '/messages/?maxResults=10',
-      //path: '/gmail/v1/users/' + user + '/messages/',
+      path: '/gmail/v1/users/' + user + '/messages/?q=label:inbox',
       method: 'GET',
       headers: {
           'Authorization' :'Bearer ' + accessToken  
