@@ -1,50 +1,66 @@
 
-var https       = require('https');
-var express     = require('express');
-var querystring = require('querystring');
-var Promise     = require('promise');
-var app         = express();
+var https           = require('https');
+var express         = require('express');
+var querystring     = require('querystring');
+var Promise         = require('promise');
+var pug             = require('pug');
+var app             = express();
+var htmlPugFunction = pug.compileFile('./views/template.pug');
+
+app.disable('view cache');
 
 app.get('/oauth2callback', function(req,res) {
 	console.log('\n>>>**************************************');
 	console.log('Request received...\n');
-	res.writeHead(200, {'Content-Type': 'text/plain;charset=UTF-8'});
+	res.writeHead(200, {'Content-Type': 'text/html;charset=UTF-8'});
 
+	// Define the Gmail user inbox fixed, not necessary dinamically right now
 	var userEmail         = 'ualter.junior@gmail.com';
+	// Receive the authrorization code given by the user's consent, that's me!
 	var authorizationCode = req.query.code;
-	console.log('Authorization Code.....:' +  req.query.code);
+	console.log('Authorization Code.....:' +  req.query.code.substring(0,25) + '...');
 
+	// Perform a HTTP POST Request to retrieve the Access Token using the given authorization code
 	retrieveAccessToken(authorizationCode, function(resultRetrieveAccessToken) {
 		var jsonToken = JSON.parse(resultRetrieveAccessToken);  
-		console.log('Access Token...........:' + jsonToken.access_token);
+		console.log('Access Token...........:' + jsonToken.access_token.substring(0,70) + '...');
 
+		// Perform a HTTP GET Request to retrieve the list of User's Gmail Inbox Messages
 		listUserGmailMailbox(userEmail,jsonToken.access_token,function(resultListUserGmailMailbox) {
-			var jsonListMsgs = JSON.parse(resultListUserGmailMailbox); 
-			var messages     = jsonListMsgs.messages; 
+			var messages = JSON.parse(resultListUserGmailMailbox).messages; 
 			console.log('Total Inbox Messages...:' + messages.length);
 
+
+			// Using Promise object to collect all the results of the all asynchronous operation of reading the email message details info
 			Promise.all(messages.map( function getMessage(msg) {
 				return new Promise( function (resolve, reject) {
+					// Perform a HTTP GET Request to retrieve the data for each of the messages retrieved at the User's Gmail Inbox 
 					readUserGmailMailboxMessage(userEmail,jsonToken.access_token,msg.id,function(resultReadUserGmailMailboxMessage) {
-						var jsonEmailMsg = JSON.parse(resultReadUserGmailMailboxMessage);  
-
-						var emailMessage = jsonEmailMsg.id;
-						emailMessage += ' - ';
-						var subject = jsonEmailMsg.payload.headers.find(header => header.name === 'Subject');
-						if (subject != undefined) {
-							emailMessage += subject.value;
-						}
-						console.log('  ---> ' + emailMessage);
-						resolve(emailMessage);
+						resolve( JSON.parse(resultReadUserGmailMailboxMessage) );
 					});
 
 				});
-			})).then(function(inboxMessages) {
-				var content = ' --> The ' + inboxMessages.length + ' Inbox Messages of ' + userEmail + '\n';
-				inboxMessages.forEach(function(emailMessage) {
-					content += emailMessage + "\n"
+			})).then( function(listMessages) {
+				var tableMessages = [];
+
+				listMessages.forEach ( m => {
+					var from    = m.payload.headers.find(header => header.name === 'From');
+					var subject = m.payload.headers.find(header => header.name === 'Subject');
+
+					console.log( '   --> Message.Id: ' + m.id);
+
+					var messageLine        = {};
+					messageLine["id"]      = m.id;
+					messageLine["from"]    = (from    != undefined ? from.value    : "");
+					messageLine["subject"] = (subject != undefined ? subject.value : "");
+					tableMessages.push(messageLine);
 				});
-				res.end(content);
+				
+				// Using Node JS Pug Template to render an "friendly" HTML view
+				var html = htmlPugFunction({
+				  name:userEmail, messageList:tableMessages
+				});
+				res.end(html);
 
 				console.log('\nResponse sent...');
 				console.log('<<<**************************************');
@@ -54,6 +70,8 @@ app.get('/oauth2callback', function(req,res) {
 	});
 }).listen(8080);
 
+// HTTP POST Request to retrieve a Access Token 
+// with the "API Server" (Authorization Server)
 function retrieveAccessToken(authorizationCode, callBack) {
 	var postData = querystring.stringify({
 	    'code'         : authorizationCode,
@@ -84,6 +102,8 @@ function retrieveAccessToken(authorizationCode, callBack) {
   	postReq.end();	
 }
 
+// HTTP GET Request to retrieve with the "API Server" (Resource Server) 
+// a list of messages at the Inbox's "User" (Resource Owner)
 function listUserGmailMailbox(user,accessToken,callBack) {
 	var getOptions = {
       host: 'www.googleapis.com',
@@ -108,6 +128,8 @@ function listUserGmailMailbox(user,accessToken,callBack) {
   	getReq.end();	
 }
 
+// HTTP GET Request to retrieve with the "API Server" (Resource Server) 
+// the data of a specific Gmail message of the "User" (Resource Owner)
 function readUserGmailMailboxMessage(user,accessToken,id,callBack) {
 	var getOptions = {
       host: 'www.googleapis.com',
@@ -133,7 +155,8 @@ function readUserGmailMailboxMessage(user,accessToken,id,callBack) {
 }
 
 console.log('');
-console.log('........................................');
-console.log('Server running at http://localhost:8080/');
-console.log('........................................');
+console.log('.........................................');
+console.log(' Ualter OAuth2 Sandbox App               ');
+console.log(' Server running at http://localhost:8080/');
+console.log('.........................................');
 console.log('');

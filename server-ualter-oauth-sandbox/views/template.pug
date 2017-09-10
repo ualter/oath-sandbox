@@ -1,0 +1,23 @@
+html
+	head
+		title= 'Ualter OAuth Sandbox'
+		style
+			include style.css
+	body
+		span(style='font-size:14px;font-weight:bold') 
+			|	Gmail Inbox Messages
+			|	of&nbsp;
+		span(style='font-size:14px;font-weight:bolder;text-decoration:underline')
+			| 	#{name}
+		br
+		br
+		table(cellpadding='1' cellspacing='0')
+				tr(class='header' valign='middle' align='center')
+					td='ID'
+					td='From'
+					td='Subject'
+				for message in messageList
+					tr(class='line')
+						td=message.id
+						td=message.from
+						td=message.subject
