@@ -118,7 +118,7 @@ public class GooglePubSubMainController implements Initializable {
 
 	public GooglePubSubMainController() {
 		Yaml yaml = new Yaml();
-		this.myDb = yaml.loadAs(GooglePubSubMainController.class.getResourceAsStream("/com/ujr/oath/utils/my-simple-db.yaml"), MySimpleDb.class);
+		this.myDb = yaml.loadAs(GooglePubSubMainController.class.getResourceAsStream("/com/ujr/oauth/utils/my-simple-db.yaml"), MySimpleDb.class);
 	}
 
 	@Override

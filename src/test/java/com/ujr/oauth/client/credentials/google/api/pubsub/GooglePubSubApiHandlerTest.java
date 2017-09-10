@@ -1,4 +1,4 @@
-package com.ujr.oath.client.credentials.google.api.pubsub;
+package com.ujr.oauth.client.credentials.google.api.pubsub;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

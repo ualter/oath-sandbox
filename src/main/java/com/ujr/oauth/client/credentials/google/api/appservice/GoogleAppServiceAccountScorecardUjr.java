@@ -23,7 +23,7 @@ public class GoogleAppServiceAccountScorecardUjr implements GoogleAppServiceAcco
 	
 	private void init() {
 		try {
-			URL url = GoogleJwtApiHandler.class.getResource("/com/ujr/oath/client/credentials/google/api/appservice/scorecard-ujr-2a310402735b.json");
+			URL url = GoogleJwtApiHandler.class.getResource("/com/ujr/oauth/client/credentials/google/api/appservice/scorecard-ujr-2a310402735b.json");
 			Path pathFile = Paths.get(url.toURI());
 			String jsonString = new String(Files.readAllBytes(pathFile));
 			ObjectMapper mapper = new ObjectMapper();

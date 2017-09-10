@@ -1,0 +1,10 @@
+{
+  "name": "server-ualter-oauth-sandbox",
+  "description": "Server OAuth Sandbox",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+      "express": "3.x",
+      "promise": "8.x"
+  }
+}

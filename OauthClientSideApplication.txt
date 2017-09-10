@@ -22,7 +22,14 @@ Below we are using the Authorization Grant: Authorization Code
 ******************************************************************************************************************************************************************************
 ******************************************************************************************************************************************************************************
 
+1. Ask The Authorization Code
+https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=899377700198-4o708rg7ddptckrsdmq3bfuduvuckjj7.apps.googleusercontent.com&scope=https://www.googleapis.com/auth/gmail.readonly&redirect_uri=http%3A%2F%2Flocalhost:8080/wwwhttp/oauthcallback/index.html
+1.1 Response
+code=4/z1Ux6EjnBnYD_LIb4mECCQbwmbESfTr_2yAU98O1AwE#
 
+
+
+Implicit: JAVASCRIPT DIRECT ACCESS TOKEN
 -----  URL to get the Access Token  -----
 https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=899377700198-4o708rg7ddptckrsdmq3bfuduvuckjj7.apps.googleusercontent.com&scope=https://www.googleapis.com/auth/gmail.readonly&redirect_uri=http%3A%2F%2Flocalhost:8080/wwwhttp/oauthcallback/index.html
 -------------------------------------------

@@ -35,14 +35,14 @@ public class OauthAppStart extends Application {
 		
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(OauthAppStart.class.getResource("/com/ujr/oath/gui/GooglePubSubMain.fxml"));
+			loader.setLocation(OauthAppStart.class.getResource("/com/ujr/oauth/gui/GooglePubSubMain.fxml"));
 			this.rootLayout = (Pane) loader.load();
 			
 			GooglePubSubMainController googlePuSubMainController = loader.getController();
 			googlePuSubMainController.setAppStart(this);
 			
 			Scene scene = new Scene(rootLayout);
-			scene.getStylesheets().add("/com/ujr/oath/gui/GooglePubSubMain.css");
+			scene.getStylesheets().add("/com/ujr/oauth/gui/GooglePubSubMain.css");
 			stage.setScene(scene);
 			stage.show();
 			

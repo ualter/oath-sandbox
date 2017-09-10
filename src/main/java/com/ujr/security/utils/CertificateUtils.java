@@ -34,7 +34,7 @@ public class CertificateUtils {
 	}
 	
 	private static void TEST_loadScorecardCertificate() {
-		Path            certificateFile = CertificateUtils.loadCertificateFile("/br/com/oath/sandbox/jwt/scorecard_public_certificate.pem");
+		Path            certificateFile = CertificateUtils.loadCertificateFile("/br/com/oauth/sandbox/jwt/scorecard_public_certificate.pem");
 		X509Certificate x509Certificate = CertificateUtils.loadCertificate(certificateFile);
 		PublicKey       publicKey       = x509Certificate.getPublicKey();
 		System.out.println(FLUSH());

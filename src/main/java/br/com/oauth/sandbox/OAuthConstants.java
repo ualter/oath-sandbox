@@ -9,7 +9,7 @@ public class OAuthConstants {
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 	public static final String AUTHENTICATION_SERVER_URL = "authentication_server_url";
-	public static final String CONFIG_FILE_PATH = "br/com/oath/sandbox/Oauth2Client.config";
+	public static final String CONFIG_FILE_PATH = "br/com/oauth/sandbox/Oauth2Client.config";
 	public static final String RESOURCE_SERVER_URL = "resource_server_url";
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String SCOPE = "scope";
