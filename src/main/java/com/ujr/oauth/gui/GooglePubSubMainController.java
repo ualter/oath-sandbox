@@ -1,5 +1,7 @@
 package com.ujr.oauth.gui;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,6 +30,7 @@ import com.ujr.oauth.utils.Utils;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -224,6 +227,10 @@ public class GooglePubSubMainController implements Initializable {
 				
 				this.tableMessagesSent.scrollTo(totalSent -1);
 			});
+			
+			taskPublishMessageTopic.setOnFailed(e -> {
+				showTaskError(e);
+			});
 		}
 		
 	}
@@ -267,7 +274,18 @@ public class GooglePubSubMainController implements Initializable {
 			
 		});
 		
+		taskPullMessagesSubscription.setOnFailed(e -> {
+			showTaskError(e);
+		});
+		
 		return taskPullMessagesSubscription;
+	}
+
+	private void showTaskError(WorkerStateEvent e) {
+		Throwable ex = e.getSource().getException(); 
+		StringWriter errors = new StringWriter();
+		ex.printStackTrace(new PrintWriter(errors));
+		LOG.error(errors.toString());
 	}
 
 	private void receiveMessages(int subscriptionIndex, ResponsePullMessagesSubscription response) {

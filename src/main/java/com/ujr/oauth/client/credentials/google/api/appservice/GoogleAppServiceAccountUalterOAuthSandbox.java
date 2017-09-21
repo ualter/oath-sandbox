@@ -28,7 +28,11 @@ public class GoogleAppServiceAccountUalterOAuthSandbox implements GoogleAppServi
 	
 	private void init() {
 		try {
-			URL url = GoogleJwtApiHandler.class.getResource("/com/ujr/oauth/client/credentials/google/api/appservice/ualter-oauth-sandbox-28d6b2d2477c.json");
+			String jsonAccountFile = "/com/ujr/oauth/client/credentials/google/api/appservice/ualter-oauth-sandbox-28d6b2d2477c.json"; 
+			URL url = GoogleJwtApiHandler.class.getResource(jsonAccountFile);
+			if ( url == null ) {
+				throw new RuntimeException(jsonAccountFile + " not found!"); 
+			}
 			Path pathFile = Paths.get(url.toURI());
 			String jsonString = new String(Files.readAllBytes(pathFile));
 			ObjectMapper mapper = new ObjectMapper();
