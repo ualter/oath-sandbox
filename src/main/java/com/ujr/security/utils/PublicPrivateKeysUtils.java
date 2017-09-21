@@ -41,6 +41,38 @@ public class PublicPrivateKeysUtils {
 	
 	public static RSAPrivateKey extractPrivateKeyFromString(String key)  {
 		String privateKeyPEM = key;
+		
+		if ( key.contains("I am sorry") ) {
+			StringBuffer msg = new StringBuffer();
+			msg.append("\n");
+			msg.append("\n");
+			msg.append(" I am sorry, but you have to register you own Application at Google Developer Console to create your Service Account Client Credentials.");
+			msg.append("\n");
+			msg.append(" Then with this, you will have all information necessary to replace those that was erased from here. (For protection of the Application used in the sample)");
+			msg.append("\n");
+			msg.append("");
+			msg.append("\n");
+			msg.append(" When you have this done, then proceed...");
+			msg.append("\n");
+			msg.append("   --> 1. Copy the JSON file created to the path /oauth-sanbox/src/main/java/com/ujr/oauth/client/credentials/google/api/appservice/");
+			msg.append("\n");
+			msg.append("   --> 2. Goes to the Class GoogleAppServiceAccountUalterOAuthSandbox, around the line 32 and replace the name with your JSON file");
+			msg.append("\n");
+			msg.append("");
+			msg.append("\n");
+			msg.append("  This JSON file, created from you Service Account Credentials, should have the Private Key and all the others info necessary to get this working.");
+			msg.append("\n");
+			msg.append("");
+			msg.append("\n");
+			msg.append("  Any doubt how to do this?");
+			msg.append("\n");
+			msg.append("  Goes to the http://ualterazambuja.com and check the Article Part II regarding OAuth2, many thanks! ;-)");
+			msg.append("\n");
+			msg.append("");
+			msg.append("\n");
+			throw new RuntimeException(msg.toString());
+		}
+		
 	    try {
 			/*
 			// 1
