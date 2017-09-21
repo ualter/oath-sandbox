@@ -75,8 +75,8 @@ app.get('/oauth2callback', function(req,res) {
 function retrieveAccessToken(authorizationCode, callBack) {
 	var postData = querystring.stringify({
 	    'code'         : authorizationCode,
-	    'client_id'    : '378021837134-9ga1n3bkc40fasa0lgn79cpilb74lv1n.apps.googleusercontent.com',
-	    'client_secret': 'baOVq7jr3pGdzzaUh0gzlnGN',
+	    'client_id'    : '?',
+	    'client_secret': '?',
 	    'redirect_uri' : 'http://localhost:8080/oauth2callback',
 	    'grant_type'   : 'authorization_code'
 	});
@@ -155,8 +155,24 @@ function readUserGmailMailboxMessage(user,accessToken,id,callBack) {
 }
 
 console.log('');
-console.log('.........................................');
-console.log(' Ualter OAuth2 Sandbox App               ');
-console.log(' Server running at http://localhost:8080/');
-console.log('.........................................');
+console.log('\x1b[33m%s\x1b[0m','.........................................');
+console.log('\x1b[33m%s\x1b[0m',' Ualter OAuth2 Sandbox App               ');
+console.log('\x1b[33m%s\x1b[0m',' Server running at http://localhost:8080/');
+console.log('\x1b[33m%s\x1b[0m','.........................................');
+console.log('');
+console.log('');
+console.log(' Attention! This will not work as it is... ');
+console.log(' I am sorry, but you have to register you own Application at Google Developer Console to create your Client Credentials.');
+console.log(' Then with this, you will have all information necessary to replace those that was erased here. (For protection of the Application used in the sample)');
+console.log('');
+console.log('\x1b[33m%s\x1b[0m','   --> 1. client_secret');
+console.log('\x1b[33m%s\x1b[0m','   --> 2. client_id');
+console.log('\x1b[33m%s\x1b[0m','   --> 3. redirect_uri');
+console.log('');
+console.log('');
+console.log('  Goes to the lines 78, 79 and 80...  and there you insert these info, and you are ready to go.');
+console.log('');
+console.log('  Any doubt how to do this?');
+console.log('  Goes to the http://ualterazambuja.com and check the Article Part I regarding OAuth2, thanks! ;-)');
+console.log('');
 console.log('');
