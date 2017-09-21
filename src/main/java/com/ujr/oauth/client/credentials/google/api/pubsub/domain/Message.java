@@ -1,6 +1,8 @@
 package com.ujr.oauth.client.credentials.google.api.pubsub.domain;
 
 import java.util.Base64;
+
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +12,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+/**
+ * see https://cloud.google.com/pubsub/docs/reference/rest/v1/PubsubMessage
+ * @author Ualter
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "data", "attributes", "messageId", "publishTime" })
 public class Message {

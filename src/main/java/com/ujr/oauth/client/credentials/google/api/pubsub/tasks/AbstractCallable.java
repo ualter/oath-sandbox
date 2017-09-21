@@ -13,7 +13,12 @@ import com.ujr.oauth.client.credentials.google.api.appservice.GoogleAppServiceAc
 import com.ujr.oauth.client.credentials.google.api.domain.error.HttpConnectionError;
 import com.ujr.oauth.client.credentials.google.api.pubsub.GooglePubSubApiUtils;
 import com.ujr.oauth.jwt.token.AccessToken;
-
+/**
+ * 
+ * @author Ualter
+ *
+ * @param <T>
+ */
 public class AbstractCallable<T> implements Callable<T> {
 	
 	static final Logger LOG = LoggerFactory.getLogger(AbstractCallable.class);

@@ -12,6 +12,11 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class OauthAppStart extends Application {
 	
 	final static Logger LOG = LoggerFactory.getLogger(OauthAppStart.class);
@@ -26,7 +31,7 @@ public class OauthAppStart extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
-		this.stage.setTitle("OAth Google Pub/Sub API");
+		this.stage.setTitle("OAuth 2.0 - Google Pub/Sub API Services");
 		this.initRootLayout();
 		
 	}

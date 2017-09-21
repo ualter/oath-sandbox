@@ -29,6 +29,11 @@ import com.ujr.oauth.client.credentials.google.api.pubsub.taks.pullmessages.Call
 import com.ujr.oauth.client.credentials.google.api.pubsub.taks.pullmessages.FutureTaskPullMessagesSubscription;
 import com.ujr.oauth.jwt.token.AccessToken;
 
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 	
 	static final Logger LOG = LoggerFactory.getLogger(GooglePubSubApiHandler.class);
@@ -44,6 +49,7 @@ public class GooglePubSubApiHandler extends HttpCommunicationHandler {
 		FutureTaskPullMessagesSubscription taskPullMessagesSubscription = new FutureTaskPullMessagesSubscription(callable);
 		return taskPullMessagesSubscription;
 	}
+	
 	
 	public void acknowledgeReceivedMessages(ListAckIds listAckIds, String subscription) {
 		LOG.info("Acknowledge Received Messages for Subscription {}, total of {} messages...",subscription, listAckIds.getAckIds().size());

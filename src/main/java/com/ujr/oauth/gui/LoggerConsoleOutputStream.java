@@ -7,6 +7,11 @@ import java.io.UnsupportedEncodingException;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class LoggerConsoleOutputStream extends OutputStream {
 	
 	private TextArea textArea;

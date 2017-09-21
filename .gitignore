@@ -3,3 +3,7 @@ logs
 *.log
 node_modules/
 jspm_packages/
+./src/main/java/com/ujr/oauth/client/credentials/google/api/appservice/scorecard-ujr-2a310402735b.json
+client_secret_378021837134-9ga1n3bkc40fasa0lgn79cpilb74lv1n.apps.googleusercontent.com.json
+notes.txt
+OauthClientSideApplication.txt

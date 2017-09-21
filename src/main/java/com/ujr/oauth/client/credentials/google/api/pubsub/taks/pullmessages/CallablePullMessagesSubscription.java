@@ -17,6 +17,11 @@ import com.ujr.oauth.client.credentials.google.api.pubsub.domain.pull.RequestPul
 import com.ujr.oauth.client.credentials.google.api.pubsub.domain.pull.ResponsePullMessagesSubscription;
 import com.ujr.oauth.client.credentials.google.api.pubsub.tasks.AbstractCallable;
 
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class CallablePullMessagesSubscription extends AbstractCallable<ResponsePullMessagesSubscription> {
 
 	static final Logger LOG = LoggerFactory.getLogger(CallablePullMessagesSubscription.class);

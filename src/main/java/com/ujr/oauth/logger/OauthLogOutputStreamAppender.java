@@ -5,6 +5,12 @@ import java.io.OutputStream;
 
 import ch.qos.logback.core.OutputStreamAppender;
 
+/**
+ * 
+ * @author Ualter
+ *
+ * @param <E>
+ */
 public class OauthLogOutputStreamAppender<E> extends OutputStreamAppender<E> {
 
 
@@ -21,13 +27,6 @@ public class OauthLogOutputStreamAppender<E> extends OutputStreamAppender<E> {
     }
 
     private static class DelegatingOutputStream extends FilterOutputStream {
-
-//        public DelegatingOutputStream(OutputStream out){
-//            super(new OutputStream() {
-//                @Override
-//                public void write(int b) throws IOException {}
-//            });
-//        }
 
         public DelegatingOutputStream(OutputStream out) {
 			super(out);

@@ -1,5 +1,10 @@
 package com.ujr.oauth.client.credentials.google.api.pubsub;
 
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class GooglePubSubApiUtils {
 
 	public static String URL_PULL_MSGS_SUBSCRIPTION   = "https://pubsub.googleapis.com/v1/projects/#project_id#/subscriptions/#subscription#:pull";

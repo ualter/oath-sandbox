@@ -4,9 +4,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -17,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import com.ujr.oauth.client.credentials.google.api.appservice.GoogleAppServiceAccount;
-import com.ujr.oauth.client.credentials.google.api.appservice.GoogleAppServiceAccountScorecardUjr;
+import com.ujr.oauth.client.credentials.google.api.appservice.GoogleAppServiceAccountUalterOAuthSandbox;
 import com.ujr.oauth.client.credentials.google.api.pubsub.GooglePubSubApiHandler;
 import com.ujr.oauth.client.credentials.google.api.pubsub.domain.publish.ListMessages;
 import com.ujr.oauth.client.credentials.google.api.pubsub.domain.publish.ResponsePublishTopic;
@@ -29,8 +27,6 @@ import com.ujr.oauth.utils.Utils;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,7 +42,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
-
+/**
+ * 
+ * @author Ualter
+ *
+ */
 public class GooglePubSubMainController implements Initializable {
 
 	private static Logger LOG = LoggerFactory.getLogger(GooglePubSubMainController.class);
@@ -350,7 +350,7 @@ public class GooglePubSubMainController implements Initializable {
 
 		@Override
 		protected ResponsePullMessagesSubscription call() throws Exception {
-			GoogleAppServiceAccount appServiceAccount = new GoogleAppServiceAccountScorecardUjr();
+			GoogleAppServiceAccount appServiceAccount = new GoogleAppServiceAccountUalterOAuthSandbox();
 			GooglePubSubApiHandler pubSubApiHandler = new GooglePubSubApiHandler(appServiceAccount);
 
 			RequestPullMessagesSubscription request = new RequestPullMessagesSubscription();
@@ -362,9 +362,9 @@ public class GooglePubSubMainController implements Initializable {
 			ExecutorService executor = Utils.createExecutorService("CONSUMER_" + NAMESUBS[subscriptionIndex] +  "-->PULLING");
 			executor.execute(futureTaskResponse);
 			
-			
 			try {
-				int times = 3600;
+				// Let's put a timeout around of 5 minutes
+				int times = 18000;
 				int index = times;
 				
 				// Start Listening  
@@ -434,7 +434,7 @@ public class GooglePubSubMainController implements Initializable {
 
 		@Override
 		protected ResponsePublishTopic call() throws Exception {
-			GoogleAppServiceAccount appServiceAccount = new GoogleAppServiceAccountScorecardUjr();
+			GoogleAppServiceAccount appServiceAccount = new GoogleAppServiceAccountUalterOAuthSandbox();
 			GooglePubSubApiHandler pubSubApiHandler = new GooglePubSubApiHandler(appServiceAccount);
 
 			ListMessages listMessages = new ListMessages();

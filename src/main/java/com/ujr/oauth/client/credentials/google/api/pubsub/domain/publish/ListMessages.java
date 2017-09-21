@@ -12,6 +12,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.ujr.oauth.client.credentials.google.api.pubsub.domain.Message;
 
+/**
+ * 
+ * see https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.topics/publish
+ * 
+ * @author Ualter
+ * 
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "messages" })
 public class ListMessages {

@@ -13,7 +13,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
@@ -23,6 +22,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/**
+ * I found that the Toggle Button is very poor its graphic interface, so... I decided
+ * to have some fun researching and building a new JavaFX graphic component by myself, 
+ * this is anything else than this, a Toggle Button.
+ * 
+ * @author Ualter
+ *
+ */
 public class ToggleSwitch extends Parent {
 
         private BooleanProperty switchedOn = new SimpleBooleanProperty(false);
